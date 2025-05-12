@@ -10,8 +10,8 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:visibility="gone"
-        tools:visibility="visible"
-        tools:context=".view.WeatherFragment">
+        tools:context=".view.WeatherFragment"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tv_city"
@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:textSize="40sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_margin="30dp"
             tools:text="Moscow" />
@@ -30,7 +29,7 @@
             android:layout_height="wrap_content"
             android:textSize="32sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/center_vertical"
             app:layout_constraintBottom_toTopOf="@id/img_icon_weather"
             android:layout_margin="30dp"
             tools:text="Clouds"/>
@@ -41,6 +40,7 @@
             android:layout_height="wrap_content"
             android:textSize="56sp"
             android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/center_vertical"
             app:layout_constraintTop_toTopOf="parent"
@@ -58,7 +58,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/icon_of_weather"
-            app:layout_constraintStart_toEndOf="@id/center_vertical"
+            app:layout_constraintStart_toEndOf="@id/tv_temp"
             app:layout_constraintTop_toTopOf="@id/tv_temp" />
 
         <TextView
@@ -68,8 +68,8 @@
             android:textSize="20sp"
             android:layout_margin="20dp"
             app:layout_constraintBottom_toTopOf="@id/tv_wind_kmp"
-            app:layout_constraintStart_toStartOf="@id/tv_wind_kmp"
-            app:layout_constraintEnd_toEndOf="@id/tv_wind_kmp"/>
+            app:layout_constraintStart_toStartOf="@id/center_vertical"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_wind_kmp"
@@ -77,10 +77,10 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_temp"
+            app:layout_constraintStart_toStartOf="@id/center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="3 km/p" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -114,6 +114,6 @@
         android:id="@+id/progress_bar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
 </FrameLayout>

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +10,9 @@ android {
     namespace = "com.example.dagger2"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.dagger2"
         minSdk = 28
@@ -16,6 +21,23 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val keystoreFile = project.rootProject.file("local.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        val token = properties.getProperty("token") ?: ""
+        val baseUrl = properties.getProperty("baseUrl") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "baseUrl",
+            value = baseUrl
+        )
+        buildConfigField(
+            type = "String",
+            name = "token",
+            value = token
+        )
     }
 
     buildTypes {
@@ -40,10 +62,13 @@ android {
 }
 
 dependencies {
+    // Glide
+    implementation(libs.glide)
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
-    // Retrofit2
+    // Internet
+    implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
     // Dagger2
@@ -53,7 +78,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.google.play.services.location)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

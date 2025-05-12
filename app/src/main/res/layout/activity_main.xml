@@ -4,5 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity"
+    android:name="com.example.dagger2.view.WeatherFragment"
+    tools:layout="@layout/fragment_weather">
 </androidx.fragment.app.FragmentContainerView>

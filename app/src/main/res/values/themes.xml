@@ -3,7 +3,20 @@
     <style name="Base.Theme.Dagger2" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textViewStyle">@style/TextViewCursive</item>
+        <item name="materialButtonStyle">@style/ButtonCursive</item>
     </style>
 
     <style name="Theme.Dagger2" parent="Base.Theme.Dagger2" />
+
+    <style name="TextViewCursive">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ButtonCursive" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+
 </resources>
