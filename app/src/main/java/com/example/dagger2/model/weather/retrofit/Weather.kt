@@ -1,4 +1,4 @@
-package com.example.dagger2.model.repository.weather.retrofit
+package com.example.dagger2.model.weather.retrofit
 
 import com.google.gson.annotations.SerializedName
 

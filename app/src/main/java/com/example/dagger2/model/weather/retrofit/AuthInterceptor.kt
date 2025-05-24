@@ -1,4 +1,4 @@
-package com.example.dagger2.model.repository.weather.retrofit
+package com.example.dagger2.model.weather.retrofit
 
 import com.example.dagger2.BuildConfig
 import okhttp3.Interceptor

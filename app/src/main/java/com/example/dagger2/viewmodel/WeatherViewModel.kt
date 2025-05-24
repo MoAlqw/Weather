@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dagger2.model.repository.location.LocationRepository
-import com.example.dagger2.model.repository.location.LocationResult
-import com.example.dagger2.model.repository.weather.WeatherRepository
-import com.example.dagger2.model.repository.weather.WeatherResult
+import com.example.dagger2.model.location.repository.LocationRepository
+import com.example.dagger2.model.location.LocationResult
+import com.example.dagger2.model.weather.repository.WeatherRepository
+import com.example.dagger2.model.weather.WeatherResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

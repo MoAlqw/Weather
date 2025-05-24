@@ -1,6 +1,6 @@
-package com.example.dagger2.model.repository.weather
+package com.example.dagger2.model.weather
 
-import com.example.dagger2.model.repository.weather.retrofit.Weather
+import com.example.dagger2.model.weather.retrofit.Weather
 
 sealed class WeatherResult {
     data class Success(val data: Weather) : WeatherResult()

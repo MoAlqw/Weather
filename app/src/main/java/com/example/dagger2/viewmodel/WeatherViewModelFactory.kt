@@ -2,9 +2,8 @@ package com.example.dagger2.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.dagger2.model.repository.location.LocationHelper
-import com.example.dagger2.model.repository.location.LocationRepository
-import com.example.dagger2.model.repository.weather.WeatherRepository
+import com.example.dagger2.model.location.repository.LocationRepository
+import com.example.dagger2.model.weather.repository.WeatherRepository
 
 class WeatherViewModelFactory(
     private val weatherRepository: WeatherRepository,

@@ -17,14 +17,10 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.dagger2.R
 import com.example.dagger2.WeatherApp
-import com.example.dagger2.model.repository.location.LocationResult
-import com.example.dagger2.model.repository.weather.WeatherResult
-import com.example.dagger2.model.repository.weather.retrofit.Weather
+import com.example.dagger2.model.location.LocationResult
+import com.example.dagger2.model.weather.WeatherResult
+import com.example.dagger2.model.weather.retrofit.Weather
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.Priority
 
 class WeatherFragment : Fragment() {
 
@@ -69,14 +65,18 @@ class WeatherFragment : Fragment() {
 
         binding.btnGetLocation.setOnClickListener {
             viewModel.getLocation()
+            showLoadScreen()
         }
 
         viewModel.location.observe(viewLifecycleOwner) { location: LocationResult ->
             when(location) {
                 is LocationResult.NoPermission -> showPermissionDialog()
-                is LocationResult.GpsOff -> showGpsDialog()
+                is LocationResult.GpsOff -> showErrorScreen(R.string.turn_on_your_gps)
+                is LocationResult.GpsOn -> null
+                is LocationResult.GpsResolutionRequired -> showGpsDialog(location.exception)
                 is LocationResult.NotAvailable -> showErrorScreen(R.string.turn_on_your_gps)
                 is LocationResult.Success -> {
+                    showErrorScreen(R.string.app_name)
                     viewModel.getWeather("${location.location.latitude},${location.location.longitude}")
                 }
             }
@@ -95,6 +95,12 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
+    private fun showLoadScreen() {
+        binding.containerSuccess.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+        binding.errorLocationContainer.visibility = View.GONE
+    }
+
     private fun showErrorScreen(idString: Int) {
         binding.containerSuccess.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
@@ -102,25 +108,15 @@ class WeatherFragment : Fragment() {
         binding.tvError.text = getString(idString)
     }
 
-    private fun showGpsDialog() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 500L).build()
-        val settingsRequest = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-            .setAlwaysShow(true)
-            .build()
-
-        LocationServices.getSettingsClient(requireContext())
-            .checkLocationSettings(settingsRequest)
-            .addOnFailureListener { exception ->
-                if (exception is ResolvableApiException) {
-                    val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
-                    gpsLauncher.launch(intentSenderRequest)
-                }
-            }
+    private fun showGpsDialog(exception: Exception) {
+        if (exception is ResolvableApiException) {
+            val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
+            gpsLauncher.launch(intentSenderRequest)
+        }
     }
 
     private fun showPermissionDialog() {
-        locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     private fun showWeatherUi(weather: Weather) {
@@ -128,14 +124,13 @@ class WeatherFragment : Fragment() {
         binding.errorLocationContainer.visibility = View.GONE
         binding.containerSuccess.visibility = View.VISIBLE
         with(binding) {
+            Glide.with(requireContext())
+                .load("https:" + weather.current.condition.icon)
+                .into(imgIconWeather)
             tvTemp.text = getString(R.string.temp_c, weather.current.tempC.toInt())
             tvCity.text = weather.location.city
             tvWindKmp.text = getString(R.string.wind_kmp, weather.current.wind.toInt())
             tvDescriptionOfWeather.text = weather.current.condition.description
-            Glide
-                .with(requireContext())
-                .load("https:" + weather.current.condition.icon)
-                .into(imgIconWeather)
         }
     }
 }

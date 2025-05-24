@@ -1,6 +1,7 @@
-package com.example.dagger2.model.repository.weather
+package com.example.dagger2.model.weather.repository
 
-import com.example.dagger2.model.repository.weather.retrofit.WeatherApi
+import com.example.dagger2.model.weather.WeatherResult
+import com.example.dagger2.model.weather.retrofit.WeatherApi
 
 class WeatherRepositoryImpl(
     private val weatherApi: WeatherApi

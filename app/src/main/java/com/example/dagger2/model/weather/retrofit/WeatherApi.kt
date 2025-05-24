@@ -1,4 +1,4 @@
-package com.example.dagger2.model.repository.weather.retrofit
+package com.example.dagger2.model.weather.retrofit
 
 import retrofit2.http.GET
 import retrofit2.http.Query
