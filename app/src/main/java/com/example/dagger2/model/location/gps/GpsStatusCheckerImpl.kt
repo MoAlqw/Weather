@@ -24,7 +24,7 @@ class GpsStatusCheckerImpl(context: Context): GpsStatusChecker {
             .addOnSuccessListener { cont.resume(LocationResult.GpsOn) }
             .addOnFailureListener { e ->
                 if (e is ResolvableApiException) {
-                    cont.resume(LocationResult.GpsResolutionRequired(e))
+                    cont.resume(LocationResult.GpsResolutionRequired(AndroidGpsResolution(e)))
                 } else {
                     cont.resume(LocationResult.GpsOff)
                 }

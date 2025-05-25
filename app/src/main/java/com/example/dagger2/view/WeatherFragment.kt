@@ -1,5 +1,6 @@
 package com.example.dagger2.view
 
+import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +21,6 @@ import com.example.dagger2.WeatherApp
 import com.example.dagger2.model.location.LocationResult
 import com.example.dagger2.model.weather.WeatherResult
 import com.example.dagger2.model.weather.retrofit.Weather
-import com.google.android.gms.common.api.ResolvableApiException
 
 class WeatherFragment : Fragment() {
 
@@ -29,7 +29,8 @@ class WeatherFragment : Fragment() {
     private val viewModel: WeatherViewModel by viewModels {
         WeatherViewModelFactory(
             (requireActivity().application as WeatherApp).weatherRepository,
-            (requireActivity().application as WeatherApp).locationRepository)
+            (requireActivity().application as WeatherApp).locationRepository
+        )
     }
     private lateinit var gpsLauncher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<String>
@@ -69,21 +70,21 @@ class WeatherFragment : Fragment() {
         }
 
         viewModel.location.observe(viewLifecycleOwner) { location: LocationResult ->
-            when(location) {
-                is LocationResult.NoPermission -> showPermissionDialog()
+            when (location) {
+                is LocationResult.NoPermission -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 is LocationResult.GpsOff -> showErrorScreen(R.string.turn_on_your_gps)
-                is LocationResult.GpsOn -> null
-                is LocationResult.GpsResolutionRequired -> showGpsDialog(location.exception)
+                is LocationResult.GpsResolutionRequired -> location.resolution.launch(gpsLauncher)
                 is LocationResult.NotAvailable -> showErrorScreen(R.string.turn_on_your_gps)
                 is LocationResult.Success -> {
-                    showErrorScreen(R.string.app_name)
                     viewModel.getWeather("${location.location.latitude},${location.location.longitude}")
                 }
+
+                else -> {}
             }
         }
 
         viewModel.currentWeather.observe(viewLifecycleOwner) { weather: WeatherResult ->
-            when(weather) {
+            when (weather) {
                 is WeatherResult.TechnicalError -> showErrorScreen(R.string.technical_problems)
                 is WeatherResult.Success -> showWeatherUi(weather.data)
             }
@@ -96,34 +97,27 @@ class WeatherFragment : Fragment() {
     }
 
     private fun showLoadScreen() {
-        binding.containerSuccess.visibility = View.GONE
-        binding.progressBar.visibility = View.VISIBLE
-        binding.errorLocationContainer.visibility = View.GONE
-    }
-
-    private fun showErrorScreen(idString: Int) {
-        binding.containerSuccess.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-        binding.errorLocationContainer.visibility = View.VISIBLE
-        binding.tvError.text = getString(idString)
-    }
-
-    private fun showGpsDialog(exception: Exception) {
-        if (exception is ResolvableApiException) {
-            val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
-            gpsLauncher.launch(intentSenderRequest)
+        with(binding) {
+            containerSuccess.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            errorLocationContainer.visibility = View.GONE
         }
     }
 
-    private fun showPermissionDialog() {
-        locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    private fun showErrorScreen(idString: Int) {
+        with(binding) {
+            containerSuccess.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            errorLocationContainer.visibility = View.VISIBLE
+            tvError.text = getString(idString)
+        }
     }
 
     private fun showWeatherUi(weather: Weather) {
-        binding.progressBar.visibility = View.GONE
-        binding.errorLocationContainer.visibility = View.GONE
-        binding.containerSuccess.visibility = View.VISIBLE
         with(binding) {
+            progressBar.visibility = View.GONE
+            errorLocationContainer.visibility = View.GONE
+            containerSuccess.visibility = View.VISIBLE
             Glide.with(requireContext())
                 .load("https:" + weather.current.condition.icon)
                 .into(imgIconWeather)

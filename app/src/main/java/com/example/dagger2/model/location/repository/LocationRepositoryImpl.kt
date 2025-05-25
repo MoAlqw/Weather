@@ -5,6 +5,8 @@ import com.example.dagger2.model.location.gps.GpsStatusChecker
 import com.example.dagger2.model.location.permission.LocationPermissionChecker
 import com.example.dagger2.model.location.provider.LocationProvider
 
+private const val TIME_LIMIT = 7_000L
+
 class LocationRepositoryImpl(
     private val locationPermissionChecker: LocationPermissionChecker,
     private val gpsStatusChecker: GpsStatusChecker,
@@ -15,7 +17,7 @@ class LocationRepositoryImpl(
         if (!locationPermissionChecker.hasPermission()) return LocationResult.NoPermission
 
         return when (val gpsStatus = gpsStatusChecker.checkGpsStatus()) {
-            is LocationResult.GpsOn -> locationProvider.getLocation(5_000L)
+            is LocationResult.GpsOn -> locationProvider.getLocation(TIME_LIMIT)
             else -> gpsStatus
         }
     }

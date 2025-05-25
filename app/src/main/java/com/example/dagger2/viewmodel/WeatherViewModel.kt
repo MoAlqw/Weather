@@ -38,5 +38,4 @@ class WeatherViewModel(
             _currentWeather.postValue(weatherResult)
         }
     }
-
 }

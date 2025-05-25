@@ -7,7 +7,6 @@ import okhttp3.Response
 class AuthInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
-        // TODO()
         val token = BuildConfig.token
 
         val newUrl = original.url.newBuilder()
