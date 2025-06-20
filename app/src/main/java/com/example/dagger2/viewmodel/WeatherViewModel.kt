@@ -19,7 +19,7 @@ class WeatherViewModel(
     private val _location = MutableLiveData<LocationResult>()
     val location: LiveData<LocationResult> get() = _location
     private val _currentWeather = MutableLiveData<WeatherResult>()
-    val currentWeather get() = _currentWeather
+    val currentWeather: LiveData<WeatherResult> get() = _currentWeather
 
     init {
         getLocation()
